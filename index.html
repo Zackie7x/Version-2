@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fami – Ett hem för din historia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Fami är det digitala valvet för din familjs historia. Privat, säkert och byggt för att hålla i generationer." />
+  
+  <!-- Typsnitt Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #FAFAFA;
+      --text-main: #111827;
+      --text-muted: #6B7280;
+      --primary: #15803d; 
+      --border: #E5E7EB;
+      --card-bg: #FFFFFF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* SUBTLE BACKGROUND GRID */
+    .grid-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-size: 40px 40px;
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* HEADER */
+    header {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    /* LANGUAGE TOGGLE */
+    .lang-toggle-container {
+      display: flex;
+      background: #e5e7eb;
+      padding: 3px;
+      border-radius: 99px;
+      gap: 2px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text-main);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      padding: 100px 0 60px;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 99px;
+      background: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+    
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      text-wrap: balance; 
+    }
+
+    /* CTA BUTTON */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--text-main);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    /* MISSION SECTION */
+    .mission-section {
+      text-align: center;
+      max-width: 700px;
+      margin: 60px auto 80px;
+      padding: 40px 0;
+      border-top: 1px solid transparent;
+    }
+
+    /* UPPDATERAD KICKER (GRÅ ISTÄLLET FÖR GRÖN) */
+    .kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted); /* Ändrat från var(--primary) */
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .mission-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .mission-text {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* BENTO GRID */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 100px;
+    }
+
+    .bento-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .bento-card:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+      transform: translateY(-2px);
+      border-color: #d1d5db;
+    }
+
+    .card-large { grid-column: span 2; }
+    
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    
+    .card-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-visual {
+      height: 140px;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .visual-icon {
+      color: #94a3b8;
+      width: 64px;
+      height: 64px;
+      stroke-width: 1.5;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .bento-card:hover .visual-icon {
+      color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    /* STEPS SECTION */
+    .steps-section {
+      padding: 60px 0 100px;
+      border-top: 1px solid var(--border);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .step-item h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-num {
+      font-size: 0.8rem;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    .step-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* FOUNDING FAMILIES SECTION */
+    .founding-section {
+      border-top: 1px solid var(--border);
+      padding: 80px 0;
+      text-align: left;
+    }
+    
+    .founding-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .founding-text h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+    
+    .founding-text p {
+      color: var(--text-muted);
+      max-width: 500px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .hero { padding: 60px 0 40px; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .card-large { grid-column: span 1; }
+      .steps-grid { grid-template-columns: 1fr; gap: 30px; }
+      .founding-flex { flex-direction: column; text-align: center; }
+      .hero h1 { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Subtle grid background -->
+  <div class="grid-bg"></div>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <a href="#" class="logo">Fami.</a>
+      
+      <!-- SPRÅKVÄXLARE -->
+      <div class="lang-toggle-container">
+        <button class="lang-btn active" id="btn-sv" onclick="changeLanguage('sv')">SV</button>
+        <button class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="status-badge" data-i18n="badge">Begränsad tillgång</div>
+      
+      <h1 data-i18n="title">Ett hem för din familjs historia.</h1>
+      
+      <p data-i18n="subtitle">
+        Vi bygger det digitala arkivet som inte säljer din data. 
+        En privat, säker plats där generationer möts – genom bilder, röster och minnen.
+      </p>
+
+      <a href="waitlist.html" class="btn" data-i18n="cta">Ansök om tillgång</a>
+    </section>
+
+    <!-- MISSION / WHY -->
+    <section class="mission-section">
+      <span class="kicker" data-i18n="whyKicker">Varför Fami behövs</span>
+      <h2 class="mission-title" data-i18n="whyTitle">Det som inte sparas, försvinner.</h2>
+      <p class="mission-text" data-i18n="whyText">
+        När äldre går bort försvinner ofta språk, historier och erfarenheter. Samtidigt ligger bilder utspridda i mobiler och chattappar. Fami är ett försök att ge allt detta ett hem.
+      </p>
+    </section>
+
+    <!-- BENTO GRID -->
+    <section class="bento-grid">
+      <!-- Card 1 -->
+      <div class="bento-card card-large">
+        <div class="card-visual">
+          <svg xmlns="http://www.w3.org/2000/svg" class="visual-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="3"></circle>
+            <path d="M12 8v13"></path>
+            <path d="M5 12h14"></path>
+            <path d="M5 12v6"></path>
+            <path d="M19 12v6"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="card-title" data-i18n="cardTreeTitle">Släktträd som lever</h3>
+          <p class="card-text" data-i18n="cardTreeText">
+            Bygg släktträdet tillsammans. Koppla minnen till rätt person så att nya generationer förstår hur alla hänger ihop.
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bento-card">
+        <div class="card-visual">
+          <svg xmlns="http://www.w3.org/2000/svg" class="visual-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </div>
+        <div>
+          <h3 class="card-title" data-i18n="cardVoiceTitle">Röster & Berättelser</h3>
+          <p class="card-text" data-i18n="cardVoiceText">
+            Spela in röster, sånger och livsberättelser. Saker som annars bara finns “i huvudet” får en trygg plats att bo på.
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bento-card">
+        <div class="card-visual">
+          <svg xmlns="http://www.w3.org/2000/svg" class="visual-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="card-title" data-i18n="cardPrivacyTitle">Privat sfär</h3>
+          <p class="card-text" data-i18n="cardPrivacyText">
+            Detta är inte sociala medier. Det är ett privat valv. Ingen reklam, ingen spårning, bara din familj.
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="bento-card card-large">
+        <div class="card-visual">
+          <svg xmlns="http://www.w3.org/2000/svg" class="visual-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="card-title" data-i18n="cardDiasporaTitle">För diasporan</h3>
+          <p class="card-text" data-i18n="cardDiasporaText">
+            Oavsett om släkten bor i Stockholm, Chicago eller Beirut – Fami knyter ihop trådarna över gränserna.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS (STEPS) -->
+    <section class="steps-section">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+        <span class="kicker" data-i18n="howKicker">Hur det funkar</span>
+        <h2 class="mission-title" data-i18n="howTitle">Ett digitalt vardagsrum</h2>
+        <p class="mission-text" data-i18n="howText">
+          En trygg, lugn plats där släkten kan bidra med minnen utan att det känns som ännu ett socialt medie-konto.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <!-- Steg 1 -->
+        <div class="step-item">
+          <h4><span class="step-num">01</span> <span data-i18n="step1Title">Lägg grunden</span></h4>
+          <p class="step-text" data-i18n="step1Text">
+            Börja med dig själv och dina föräldrar. Släktträdet är skelettet som allt annat hänger på.
+          </p>
+        </div>
+        
+        <!-- Steg 2 -->
+        <div class="step-item">
+          <h4><span class="step-num">02</span> <span data-i18n="step2Title">Väck historien till liv</span></h4>
+          <p class="step-text" data-i18n="step2Text">
+            Scanna gamla foton, spela in mormors röst vid köksbordet. Fyll arkivet med det som är värt att spara.
+          </p>
+        </div>
+        
+        <!-- Steg 3 -->
+        <div class="step-item">
+          <h4><span class="step-num">03</span> <span data-i18n="step3Title">Samla släkten</span></h4>
+          <p class="step-text" data-i18n="step3Text">
+            Bjud in familjen till ett dukat bord. Låt dem upptäcka, kommentera och lägga till sina egna pusselbitar.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOUNDING FAMILIES -->
+    <section class="founding-section">
+      <div class="founding-flex">
+        <div class="founding-text">
+          <h3 data-i18n="founderTitle">Founding Families</h3>
+          <p data-i18n="founderText">
+            Vi rullar ut inbjudningar i omgångar. De första 100 familjerna får status som Founding Families med unika förmåner.
+          </p>
+        </div>
+        <a href="waitlist.html" style="text-decoration: underline; font-weight: 600; color: var(--text-main);" data-i18n="founderLink">Läs mer om Founding Families →</a>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2025 Fami Inc.
+    </footer>
+  </div>
+
+  <script>
+    let currentLang = 'sv';
+
+    const content = {
+      sv: {
+        badge: "Begränsad tillgång",
+        title: "Ett hem för din familjs historia.",
+        subtitle: "Vi bygger det digitala arkivet som inte säljer din data. En privat, säker plats där generationer möts – genom bilder, röster och minnen.",
+        cta: "Ansök om tillgång",
+        
+        // WHY Section
+        whyKicker: "Varför Fami behövs",
+        whyTitle: "Det som inte sparas, försvinner.",
+        whyText: "När äldre går bort försvinner ofta språk, historier och erfarenheter. Samtidigt ligger bilder utspridda i mobiler och chattappar. Fami är ett försök att ge allt detta ett hem.",
+
+        // BENTO Cards
+        cardTreeTitle: "Släktträd som lever",
+        cardTreeText: "Bygg släktträdet tillsammans. Koppla minnen till rätt person så att nya generationer förstår hur alla hänger ihop.",
+        
+        cardVoiceTitle: "Röster & Berättelser",
+        cardVoiceText: "Spela in röster, sånger och livsberättelser. Saker som annars bara finns “i huvudet” får en trygg plats att bo på.",
+        
+        cardPrivacyTitle: "Privat sfär",
+        cardPrivacyText: "Detta är inte sociala medier. Det är ett privat valv. Ingen reklam, ingen spårning, bara din familj.",
+        
+        cardDiasporaTitle: "För diasporan",
+        cardDiasporaText: "Oavsett om släkten bor i Stockholm, Chicago eller Beirut – Fami knyter ihop trådarna över gränserna.",
+
+        // HOW Section
+        howKicker: "Hur det funkar",
+        howTitle: "Ett digitalt vardagsrum",
+        howText: "En trygg, lugn plats där släkten kan bidra med minnen utan att det känns som ännu ett socialt medie-konto.",
+        
+        step1Title: "Lägg grunden",
+        step1Text: "Börja med dig själv och dina föräldrar. Släktträdet är skelettet som allt annat hänger på.",
+        
+        step2Title: "Väck historien till liv",
+        step2Text: "Scanna gamla foton, spela in mormors röst vid köksbordet. Fyll arkivet med det som är värt att spara.",
+        
+        step3Title: "Samla släkten",
+        step3Text: "Bjud in familjen till ett dukat bord. Låt dem upptäcka, kommentera och lägga till sina egna pusselbitar.",
+
+        // Founding
+        founderTitle: "Founding Families",
+        founderText: "Vi rullar ut inbjudningar i omgångar. De första 100 familjerna får status som Founding Families med unika förmåner.",
+        founderLink: "Läs mer om Founding Families →"
+      },
+      en: {
+        badge: "Limited Access",
+        title: "A home for your family history.",
+        subtitle: "We are building the digital archive that doesn't sell your data. A private, secure place where generations meet – through photos, voices, and memories.",
+        cta: "Request Access",
+
+        // WHY Section
+        whyKicker: "Why Fami is needed",
+        whyTitle: "What isn't saved, disappears.",
+        whyText: "When elders pass away, languages, stories, and experiences often vanish. Meanwhile, photos are scattered across phones and apps. Fami gives all of this a home.",
+
+        // BENTO Cards
+        cardTreeTitle: "Living Family Trees",
+        cardTreeText: "Build the tree together. Connect memories to the right person so new generations understand how everyone is connected.",
+        
+        cardVoiceTitle: "Voices & Stories",
+        cardVoiceText: "Record voices, songs, and life stories. Things that otherwise only exist “in our heads” get a safe place to live.",
+        
+        cardPrivacyTitle: "Private Space",
+        cardPrivacyText: "This isn't social media. It's a private vault. No ads, no tracking, just your family.",
+        
+        cardDiasporaTitle: "For the Diaspora",
+        cardDiasporaText: "Whether your family lives in Stockholm, Chicago, or Beirut – Fami connects the threads across borders.",
+
+        // HOW Section
+        howKicker: "How it works",
+        howTitle: "A digital living room",
+        howText: "A safe, calm place where relatives can contribute memories without it feeling like just another social media account.",
+        
+        step1Title: "Build the foundation",
+        step1Text: "Start with yourself and your parents. The family tree is the skeleton that everything else hangs onto.",
+        
+        step2Title: "Bring history to life",
+        step2Text: "Scan old photos, record grandmother's voice at the kitchen table. Fill the archive with what's worth saving.",
+        
+        step3Title: "Gather the family",
+        step3Text: "Invite the family to a set table. Let them discover, comment, and add their own pieces to the puzzle.",
+
+        // Founding
+        founderTitle: "Founding Families",
+        founderText: "We roll out invites in batches. The first 100 families get Founding Families status with unique benefits.",
+        founderLink: "Read more about Founding Families →"
+      }
+    };
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (content[currentLang][key]) {
+          el.innerText = content[currentLang][key];
+        }
+      });
+
+      // Toggle active class
+      document.getElementById('btn-sv').classList.toggle('active', lang === 'sv');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+  </script>
+</body>
+</html>
